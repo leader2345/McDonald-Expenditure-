@@ -5,7 +5,7 @@ To predict the amount spent with Food Category and Month
 Numerical Attribute:
 * Amount
 
-Categorical Attribute:
+Categorical Attributes:
 * Day,Months,Quarterly Period, Year
 
 
