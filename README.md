@@ -1,5 +1,5 @@
 # McDonald-Expenditure-
-Objective of the dataset for my expenditure:
+Objective:
 To predict the amount spent with Food Category and Month
 
 Numerical Attribute:
