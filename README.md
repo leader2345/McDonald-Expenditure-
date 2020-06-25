@@ -1,5 +1,3 @@
-# McDonald-Expenditure-
-
 ## Introduction
 
 Using my own expenditure dataset that I've tracked over the last 6 years, I'm going to use it to predict how much I'll spend on McDonald based on the attributes: **Food Category** and **Month** in the dataset. The mobile app that I've used to track my expenditure is MoneyLover App: https://moneylover.me/.
@@ -58,7 +56,8 @@ Exclude Report 	4985
 exp_dataset[exp_dataset["Notes"].isnull().values]
 ```
 
-<img src = "Blog Pictures/Null_values_notes_table.png" alt=""></img>
+<img src = "Blog Pictures/Null_values_notes_table.png" alt="">
+<br></br>
 
 It looks like the null values are under the Driving Lessons and Salary Category.
 As we are only getting the Food Category, we can ignore these as they'll be dropped.
@@ -100,7 +99,8 @@ I'll only be getting the Food & Beverage Category. The following code extracts t
     exp_data_1 = exp_data_1[F_and_B]
     exp_data_1.head(10)
 
-<img src = "Blog Pictures/exp_data_1_head_10.png" alt=""></img>
+<img src = "Blog Pictures/exp_data_1_head_10.png" alt="">
+<br></br>
 
 The **Amount** Category displays the (-) sign. It needs to be converted to positive. I'll be using the abs()
 function to convert it to positive integers.
@@ -109,9 +109,66 @@ function to convert it to positive integers.
 exp_data_1["Amount"]= exp_data_1["Amount"].abs()
 exp_data_1.head()
 ```
-<img src="Blog Pictures/Converting_to_abs_values.png"></img>
+<img src="Blog Pictures/Converting_to_abs_values.png">
 
 ## Getting the Date Time
+I'm going to get the dates and have them split into:
+* Days
+* Month
+* Quarterly Periods
+* Years
+
+Then, I'll insert them back into the dataframe and drop the **Date** attribute.
+
+First, I'll get the Date attribute.
+
+```
+exp_data_1["Date"]
+```
+
+```
+ID
+4995    16/05/2020
+4994    16/05/2020
+4993    16/05/2020
+4992    16/05/2020
+4991    16/05/2020
+           ...    
+3540    12/04/2014
+3550    10/04/2014
+3549    10/04/2014
+3548    10/04/2014
+3546    10/04/2014
+Name: Date, Length: 3631, dtype: object
+```
+
+Notice that the data type is an *object*. It needs to be converted to a *datetime64[ns]* format.
+
+```
+All_Date = pd.to_datetime(exp_data_1["Date"], dayfirst=True)
+All_Date
+```
+
+```
+ID
+4995   2020-05-16
+4994   2020-05-16
+4993   2020-05-16
+4992   2020-05-16
+4991   2020-05-16
+          ...    
+3540   2014-04-12
+3550   2014-04-10
+3549   2014-04-10
+3548   2014-04-10
+3546   2014-04-10
+Name: Date, Length: 3631, dtype: datetime64[ns]
+```
+Now, that it's converted, I can proceed with creating the Categorical Attributes: Days, Months, Quarterly Period and Years, for the **Date** Attribute.
+
+## Splitting into the Quarterly, Monthly and Daily Period Columns
+
+### Quarterly Period
 
 
 
