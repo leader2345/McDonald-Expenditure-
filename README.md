@@ -118,7 +118,7 @@ I'm going to get the dates and have them split into:
 * Quarterly Periods
 * Years
 
-Then, I'll insert them back into the dataframe and drop the **Date** attribute.
+Then, I'll insert them back into the dataframe and drop the "Date" attribute.
 
 First, I'll get the Date attribute.
 
@@ -164,12 +164,163 @@ ID
 3546   2014-04-10
 Name: Date, Length: 3631, dtype: datetime64[ns]
 ```
-Now, that it's converted, I can proceed with creating the Categorical Attributes: Days, Months, Quarterly Period and Years, for the **Date** Attribute.
+Now, that it's converted, I can proceed with creating the Categorical Attributes: Days, Months, Quarterly Period and Years, for the "Date" Attribute.
+
+Then, I'll add all these attributes back into the original dataset and drop the "Date" column.
 
 ## Splitting into the Quarterly, Monthly and Daily Period Columns
 
 ### Quarterly Period
+To convert the Dates to quarterly periods, first I've to make a copy of the *exp_dataset_1*, this is to prevent making changes to the original dataset. Then, slice the "Date" column and convert it to Quarterly Periods.
 
+```
+exp_data_1_date = exp_data_1.copy()
+exp_date_quarterly = exp_data_1_date["Date"].dt.to_period("Q")
+exp_date_quarterly
+```
+
+```
+ID
+4995    2020Q2
+4994    2020Q2
+4993    2020Q2
+4992    2020Q2
+4991    2020Q2
+         ...  
+3540    2014Q2
+3550    2014Q2
+3549    2014Q2
+3548    2014Q2
+3546    2014Q2
+Name: Date, Length: 3631, dtype: period[Q-DEC]
+```
+## Monthly
+Similarly, I'll obtain the "Date" column and convert to months in their integer format.
+```
+exp_date_monthly = exp_data_1_date["Date"].dt.month
+np.sort(pd.unique(exp_date_monthly))
+```
+
+```
+array([ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12], dtype=int64)
+```
+
+```
+exp_date_monthly
+```
+
+```
+ID
+4995    5
+4994    5
+4993    5
+4992    5
+4991    5
+       ..
+3540    4
+3550    4
+3549    4
+3548    4
+3546    4
+Name: Date, Length: 3631, dtype: int64
+```
+
+## Day of the week
+I'll convert the "Date" to "Days" their integer format.
+
+```
+exp_date_days_1 = exp_data_1_date["Date"].dt.dayofweek+1
+exp_date_days_1
+```
+
+```
+ID
+4995    6
+4994    6
+4993    6
+4992    6
+4991    6
+       ..
+3540    6
+3550    4
+3549    4
+3548    4
+3546    4
+Name: Date, Length: 3631, dtype: int64
+```
+
+```
+np.sort(pd.unique(exp_date_days_1))
+```
+
+```
+array([1, 2, 3, 4, 5, 6, 7], dtype=int64)
+```
+<br>I've added +1 as the first day starts with 0. The integers corresponding to their day of the week are seen below.</br>
+
+Mon: 1
+
+Tue: 2
+
+Wed: 3
+
+Thu: 4
+
+Fri: 5
+
+Sat: 6
+
+Sun: 7
+
+## Year Column
+Creating the "Year" column.
+```
+exp_date_yearly =exp_data_1_date["Date"].dt.year
+exp_date_yearly
+```
+
+```
+ID
+4995    2020
+4994    2020
+4993    2020
+4992    2020
+4991    2020
+        ...
+3540    2014
+3550    2014
+3549    2014
+3548    2014
+3546    2014
+Name: Date, Length: 3631, dtype: int64
+```
+
+# Insert the Days, Month, Quarterly Period and Year columns into the original dataset
+
+```
+exp_data_1.insert(3, "Day", exp_date_days_1)
+exp_date_1.insert(4, "Month", exp_date_monthly)
+exp_data_1.insert(5, "Quarterly Period", exp_date_quarterly)
+exp_date_1.insert(6, "Year", exp_date_yearly)
+exp_data_1
+```
+
+<img src="Blog Pictures/Exp_data_1_new_columns.png">
+<br></br>
+
+Next, we move on to creating the different food categories under the "Category" column
+
+# Getting the McDonald's Food from Category column
+Now, I've to obtain all of the McDonald Food from the "Notes" column.
+
+First, we identify that all McDonald's Food start with the string "McDonald" and thus, we obtain only the "Notes" with "McDonald" string in them. Also, I've specified the string to be non-case sensitive and disable regular expression
+
+```
+McDonald_Exp = exp_data_1[exp_data_1["Notes"].str.contains("McDonald", case=False, regex=False)]
+McDonald_Exp.sort_index()
+```
+<img src="Blog Pictures/McDonald_Exp.png"/>
+<br></br>
 
 
 
