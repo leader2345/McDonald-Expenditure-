@@ -443,9 +443,28 @@ As the ID, which is the index of the DataFrame, is the unique value for each foo
 Combined_Food_Cat[Combined_Food_Cat.index.duplicated(keep=False)].sort_index()
 ```
 
-**Insert Picture**
+<img src="Blog Pictures/Duplicate_values.png">
+<br></br>
 
-As mentioned earlier, the some of the food have their categories overlapped as some rows have 2 categories inside them. For simplicity, I'll be removing every second row and then append them back into the Combined_Food_Cat.
+As mentioned earlier, the some of the food have their categories overlapped as some rows have 2 categories inside them. For simplicity, I'll be removing every second row and then append them back into the Combined_Food_Cat. There are all together 7 duplicate values.
+
+Another way to check is if the *Combined_Food_Cat* and *McDonald_Exp*'s amount add up.
+
+```
+print("Total amount spent for Combined_Food_Cat",Combined_Food_Cat["Amount"].sum())
+Total amount spent for Combined_Food_Cat 801.3
+```
+
+```
+print("Total amount spent for McDonald_Exp",McDonald_Exp["Amount"].sum())
+Total amount spent for McDonald_Exp 769.09
+```
+
+The duplicate values are giving them an additional $32.21. I'm going to remove them in the next step.
+
+## Removing duplicate values in Combined_Food_Cat
+
+
 
 
 
