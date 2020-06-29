@@ -313,7 +313,7 @@ Next, we move on to creating the different food categories under the "Category" 
 # Getting the McDonald's Food from Category column
 Now, I've to obtain all of the McDonald Food from the "Notes" column.
 
-First, we identify that all McDonald's Food start with the string "McDonald" and thus, we obtain only the "Notes" with "McDonald" string in them. Also, I've specified the string to be non-case sensitive and disable regular expression
+First, I've identified that all McDonald's Food start with the string "McDonald" and thus, we obtain only the "Notes" with "McDonald" string in them. Also, I've specified the string to be non-case sensitive and disable regular expression
 
 ```
 McDonald_Exp = exp_data_1[exp_data_1["Notes"].str.contains("McDonald", case=False, regex=False)]
@@ -321,6 +321,134 @@ McDonald_Exp.sort_index()
 ```
 <img src="Blog Pictures/McDonald_Exp.png"/>
 <br></br>
+
+# Splitting the Category column into 5 different Categories
+
+Now, I'll move on to Category column to split the "Food & Beverage" into 5 different categories:
+
+* Fish
+* Chicken
+* Sausage
+* Beef
+* Dessert
+
+## Obtaining the Fish category
+
+
+```
+McDonald_FishBurger = McDonald_Exp[McDonald_Exp["Notes"].str.contains("Fish"), case=False].copy()
+McDonald_FishBurger["Notes"].value_counts()
+```
+```
+McDonald's Filet O Fish Burger                          28
+McDonald's Double Filet O Fish                          10
+McDonald's Double Filet O Fish meal                      3
+Sentosa McDonald's double file o fish                    1
+Mcdonald filet fish Burger                               1
+McDonald's Filet O Fish meal with criss cut fries        1
+Mcdonald double fillet o fish meal                       1
+McDonald's sweet chili fish burger                       1
+McDonald's double Nacho fillet fish                      1
+McDonald's Chili Lime Fish Burger                        1
+McDonald's Double Filet O Fish meal with curly fries     1
+McDonald's nacho fillet fish                             1
+McDonald's Filet O Fish meal                             1
+Name: Notes, dtype: int64
+```
+I've added the .copy() as it'll throw warning message about attempting to replace a string in a copy of a slice in the DataFrame.
+
+Next, we'll replace the "Food & Beverage" string with "Fish"
+```
+McDonald_FishBurger.loc[:, "Category"] = "Fish"
+McDonald_FishBurger.head()
+```
+
+**Show Image here**
+
+<br>I'll do the same for the rest of the Food Category.</br>
+
+## Obtaining the Chicken Burger category
+```
+McDonald_ChickenBurger = McDonald_Exp[McDonald_Exp["Notes"].str.contains("Chicken|nuggets|Mcnugget|mcwings|mcspicy|nasi lemak|Ha Ha",case=False, regex=False)].copy()
+McDonald_ChickenBurger.head()
+```
+
+**Insert Image here**
+
+Replace "Food & Beverage" string with "Chicken"
+
+```
+McDonald_ChickenBurger.loc[:, "Category"] == "Chicken"
+McDonald_ChickenBurger.head()
+```
+
+I'm going to be dropping *herb chicken pie* from as I want it to fall under desserts.
+Later on, they're are going to be some overlapping of the Categories which will create duplicate rows, which is why I dropped it. I'll explain it later when I remove the duplicates.
+
+
+```
+herb_chicken_pie = McDonald_ChickenBurger[McDonald_ChickenBurger["Notes"].str.contains("herb chicken", case=False)]
+herb_chicken_pie
+```
+
+**Insert Picture here**
+
+```
+McDonald_ChickenBurger = McDonald_ChickenBurger.drop(herb_chicken_pie.index)
+```
+
+Please refer to the jupyter notebook for the remaining **Food Categories** as it's is the same as the above
+
+# Concatenating the Food Categories all together
+
+I'll concantenate all of the Food Categories.
+
+```
+Frames = [McDonald_FishBurger, McDonald_ChickenBurger, McDonald_Sausage, McDonald_Beef, McDonald_Desserts]
+```
+
+```
+Combined_Food_Cat = pd.concat(Frames)
+Combined_Food_Cat.sort_values(by="ID", ascending=False)
+```
+
+**Insert Picture**
+
+```
+Combined_Food_Cat["Category"].value_counts()
+```
+
+```
+Chicken     104
+Fish         51
+Beef         32
+Sausage      23
+Desserts     20
+Name: Category, dtype: int64
+```
+
+## Check if there are any "Food & Beverage" in Combined_Food_Cat
+
+```
+Combined_Food_Cat[Combined_Food_Cat["Category"] == "Food & Beverage"]
+```
+
+There aren't any.
+
+## Checking for duplicate values in Combined_Food_Cat
+
+As the ID, which is the index of the DataFrame, is the unique value for each food, I'll be using it to check for the duplicate values for the food.
+
+```
+Combined_Food_Cat[Combined_Food_Cat.index.duplicated(keep=False)].sort_index()
+```
+
+**Insert Picture**
+
+As mentioned earlier, the some of the food have their categories overlapped as some rows have 2 categories inside them. For simplicity, I'll be removing every second row and then append them back into the Combined_Food_Cat.
+
+
+
 
 
 
