@@ -170,7 +170,7 @@ Then, I'll add all these attributes back into the original dataset and drop the 
 
 ## Splitting into the Quarterly, Monthly and Daily Period Columns
 
-### Quarterly Period
+## Quarterly Period
 To convert the Dates to quarterly periods, first I've to make a copy of the *exp_dataset_1*, this is to prevent making changes to the original dataset. Then, slice the "Date" column and convert it to Quarterly Periods.
 
 ```
