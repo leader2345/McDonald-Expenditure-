@@ -464,9 +464,81 @@ The duplicate values are giving them an additional $32.21. I'm going to remove t
 
 ## Removing duplicate values in Combined_Food_Cat
 
+I'm going to drop all of the duplicate values in Combined_Food_Cat by using *duplicate_values'* index
+
+```
+Combined_Food_Cat_new = Combined_Food_Cat.drop(index=duplicate_values.index)
+len(Combined_Food_Cat)
+
+216
+```
+Now that they're gone, I'm going to append back the *non_duplicate* values back to Combined_Food_Cat_new
+
+
+```
+Combined_Food_Cat_new = Combined_Food_Cat_new.append(non_duplicate, verify_integrity=True)
+print("Total number of rows in Combined_Food_Cat_new:", len(Combined_Food_Cat_new)
+
+Total number of rows in Combined_Food_Cat_new: 223
+```
+
+The number of rows are similiar to Combined_Food_Cat. I'll check if the amount are similar.
+
+```
+McDonald_Exp["Amount"].sum()
+
+769.0999999
+```
+
+```
+Combined_Food_Cat_new["Amount"].sum()
+
+769.09999999
+```
+
+Finally, I'll check if there are duplicate values in Combined_Food_Cat_new
+
+```
+Combined_Food_Cat_new[Combined_Food_Cat_new.index.duplicated(keep=False)]
 
 
 
+	Notes 	Amount 	Category 	Day 	Month 	Quarterly Period 	Year 	Date
+ID 								
+```
+
+It's blank, so there are no more duplicate values.
+
+I'll rename Category column to a more appropriate column *Food Category*
+
+```
+Combined_Food_Cat_new.rename({"Category":"Food Category"}, axis=1, inplace=True)
+```
+
+I'll check the columns
+
+```
+Combined_Food_Cat_new.columns
+
+Index(['Notes', 'Amount', 'Food Category', 'Day', 'Month', 'Quarterly Period',
+       'Year', 'Date'],
+      dtype='object')
+```
+
+Looks good, the *Category* is renamed to *Food Category*. Now, I've to remove the *Date* column.
+
+```
+Combined_Food_Cat_new.drop("Date", axis=1, inplace=True)
+Combined_Food_Cat_new.head()
+```
+<img src="Blog Pictures/Combined_Food_Cat_new.png" />
+<br></br>
+
+## Gaining insights on McDonald's Data
+
+I'll be plotting a histogram to show the *Amount* spent for *Day*, *Month*, *Year*.   
+
+<img src="images/Combined_Food_Cat_new_histogram.png"/>
 
 
 
