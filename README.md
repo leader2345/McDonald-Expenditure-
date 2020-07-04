@@ -539,9 +539,35 @@ Combined_Food_Cat_new.head()
 I'll be plotting a histogram to show the *Amount* spent for *Day*, *Month*, *Year*.   
 
 <img src="images/Combined_Food_Cat_new_histogram.png"/>
+<br></br>
+
+Some points to take from the histogram:
+* The *Amount* highest concentration range from $2-3
+* For *Days*, the highest is spent on Friday and the least on Saturday and Sunday coming close.
+* For *Months*, there is a decrease in spending from September onwards
+* For *Years*, highest expenditure is 2019, lowest being 2015
+
+What's not shown in the histogram is the Quarterly Periods expenditure.
+I'll shown it below with each *Food Category* for each Quarterly Period using a stacked bar chart.
+
+<img src="images/Quarterly McDonald Expense.png"/>
+<br></br>
+
+Keypoints from the Quarterly McDonald Expense stacked bar charts
+
+* Amount spent on Chicken has been show to be consistently high throughout the quarters.
+* Amount spent on Desserts are the lowest throughout the quarters.
+* There are at least 3 different Catgories spent on average for each quarter.
+
+The below shows the scatter plot version of the graph
+
+<img src="images/Scatter plot for Amount spent for each Quarterly Period per Food Category.png"/>
+<br></br>
 
 
+I'll be mainly focusing on the *amount*, *Food Category* and *months* attributes.
 
+The following below shows the Attributes, Predictors and Labels.
 
 Numerical Attribute:
 * Amount
@@ -560,3 +586,6 @@ Food Category
 
 Labels (Y-axis)
 * Amount
+
+
+# Group by Monthly Periods
