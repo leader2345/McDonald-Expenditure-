@@ -589,3 +589,106 @@ Labels (Y-axis)
 
 
 # Group by Monthly Periods
+
+As per the question posed earlier, given the Month and Food Category, predict how much I'll spend.
+
+I'm going to gain insights on the *Month* and *Food Category*
+
+I'll start by grouping the *Month* and *Food Category*
+
+```
+Monthly_McDonald_exp = Combined_Food_Cat_new[["Notes", "Food Category", "Month"]].groupby(["Month", "Food Category"]).sum()
+Monthly_McDonald_exp
+```
+
+<img src="Blog Pictures/Monthly_Mc_Exp.png"/>
+
+I'll create a list for Months which is later used to plot the graph
+
+```
+months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+```
+
+I've to convert the index of the Monthly_McDonald_exp to a Series string which is later used to plot the x-axis graph.
+
+```
+Monthly_Periods = Monthly_McDonald_exp.index.to_series().astype("str")
+Monthly_Periods[0]
+
+"(1, 'Beef''s)"
+```
+
+```
+plt.figure(figsize=(15,6))
+plt.scatter(x=Monthly_Periods, y=Monthly_McDonald_exp, color="r")
+plt.xticks(np.arange(len(Monthly_Periods)), Monthly_Periods, fontsize=14, rotation=14)
+
+plt.xlabel("Month followed by Food Category", fontsize=19)
+plt.ylabel("Amount ($)", fontsize=19)
+save_fig("Month_Food_Cat_scatter_plot.png")
+plt.show()
+```
+<img src="images/Month_Food_Cat_scatter_plot.png"/>
+
+Now, I'll plot the stacked bar chart version of it.
+
+```
+Monthly_FoodCat.plot(kind="bar", stacked=True, figsize=(12,6), color=["m", "orange", "green", "Blue", "brown"])
+plt.legend(["Beef", "Chicken", "Desserts", "Fish", "Sausage"], loc='best', title="Food Category", fontsize=12)
+plt.xticks(np.arange(len(Monthly_FoodCat.index)), months, fontsize=15, color="b")
+plt.yticks(np.arange(0,120,10), color="b")
+
+plt.title("Monthly expense for each Month and Food Category in McDonald", fontsize=19, color="b")
+plt.xlabel("Month", fontsize=17, color="b")
+plt.ylabel("Amount ($)", fontsize=17, color="b")
+
+save_fig("Month_Food_Cat_stacked_bar_chart")
+plt.show()
+```
+
+<img src="images/Month_Food_Cat_stacked_bar_chart.png"/>
+
+
+key points to take note:
+* Looks almost similar to the Quarterly expense chart
+* Amount spent on *Chicken* is consistently present and high throughout the Months
+* The least spent is on *Desserts*
+* The least amount of Categories,3 Categories, were Jun, Nov, Dec
+
+There are more insights which can be found in the Jupyter notebook, like the daily spendings.
+
+Next, I'll start preparing and transforming the data.
+
+## Stratified Shuffle Split
+I'll have to split the data into training and test sets using **Stratified Shuffle Split**. This is to ensure that there is no sampling biases (The ratios of each Food Category remain the same after splitting)
+
+```
+from sklearn.model_selection import StratifiedShuffleSplit
+
+split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
+
+for train_index, test_index in split.split(Combined_Food_Cat_new, Combined_Food_Cat_new["Food Category"]):
+    print("Train_index:", train_index)
+    print()
+    print("Test_index:", test_index)
+    strat_train_set = Combined_Food_Cat_new.iloc[train_index]
+    strat_test_set = Combined_Food_Cat_new.iloc[test_index]
+
+
+Train_index: [179 160  56 182 105  74 222 207  18  70  72 206 187 138 205 152  27 161
+  37 176  76 135 171  54 193  59   5  26 198  96 212  97 122 124  30   1
+ 125  86  67  49 131 214 208  28   0 189 100 106 116 107  61  93 156 130
+  32  34   8  64 180 170  85  78  71  45 120 126  53  39  57 188 196  10
+  50 151 144  80  58 163 101 115 217  62  75  13  91 197  82 114  88 165
+ 119 172  77  19 195 174  42 192 184  92 162   9 145 118  94 216 104 150
+ 142  44 203 173 155 191 211 134 220   7 136  21 166  81 141 168 137 153
+ 157 117  40  65  17   2 169 183 123 127   6 186 213 139 209  46 200  83
+  60 175  23 132  79  68  16 221 133  35 218 111  20  24 194 102 113  43
+  98  25  33  84 210  73 201 129  11  15  89 148  14 158 109   4]
+
+Test_index: [ 29 140  48  47 108 219 121 143 202 204 147   3 181 167  90 128 178  69
+  66  41  12 103 146  87  99  55 112  95  31  63 185 149 215  22 159 199
+ 190  52  36  38  51 177 154 164 110]
+```
+
+## Checking if the food Category ratios are the same
