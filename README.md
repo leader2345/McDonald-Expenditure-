@@ -691,4 +691,53 @@ Test_index: [ 29 140  48  47 108 219 121 143 202 204 147   3 181 167  90 128 178
  190  52  36  38  51 177 154 164 110]
 ```
 
-## Checking if the food Category ratios are the same
+## Checking if the Food Category ratios are the same
+
+### training set ratios
+```
+strat_train_set["Food Category"].value_counts()/len(strat_train_set)
+
+Chicken     0.466292
+Fish        0.230337
+Beef        0.140449
+Sausage     0.101124
+Desserts    0.061798
+Name: Food Category, dtype: float64
+```
+
+### test set ratios
+```
+strat_test_set["Food Category"].value_counts()/len(strat_test_set)
+
+Chicken     0.466667
+Fish        0.222222
+Beef        0.133333
+Sausage     0.111111
+Desserts    0.066667
+Name: Food Category, dtype: float64
+```
+
+### Original Data set
+
+```
+Combined_Food_Cat_new["Food Category"].value_counts()/len(Combined_Food_Cat_new)
+
+Chicken     0.466368
+Fish        0.228700
+Beef        0.139013
+Sausage     0.103139
+Desserts    0.062780
+Name: Food Category, dtype: float64
+```
+
+```
+strat_train_set.head()
+```
+
+<img src="Blog Pictures/Stratified_train_set.png"/>
+
+
+Looks good, the ratios looks almost similar for all the sets.
+
+## Getting only Months and Amount
+Now, I'm only getting the *Month* and *Food Category* as the dependent variables and *Amount* as the independent variable.
