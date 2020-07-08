@@ -693,7 +693,7 @@ Test_index: [ 29 140  48  47 108 219 121 143 202 204 147   3 181 167  90 128 178
 
 ## Checking if the Food Category ratios are the same
 
-### training set ratios
+### Training set ratios
 ```
 strat_train_set["Food Category"].value_counts()/len(strat_train_set)
 
@@ -705,7 +705,7 @@ Desserts    0.061798
 Name: Food Category, dtype: float64
 ```
 
-### test set ratios
+### Test set ratios
 ```
 strat_test_set["Food Category"].value_counts()/len(strat_test_set)
 
@@ -739,5 +739,121 @@ strat_train_set.head()
 
 Looks good, the ratios looks almost similar for all the sets.
 
-## Getting only Months and Amount
+## Getting only Months, Food Category and Amount
 Now, I'm only getting the *Month* and *Food Category* as the dependent variables and *Amount* as the independent variable.
+```
+strat_train_set = strat_train_set.drop(["Notes", "Day", "Quarterly Period", "Year"], axis=1)
+strat_train_set
+```
+
+<img src="Blog Pictures/Strat_train_set_new.png"/>
+
+# Creating the predictors and labels
+
+## Predictors
+
+Predictors will be *Food Category* and *Month*. I'll convert the DataFrame into an array by adding `.values`.
+`axis=1` means drop the columns with the name *Amount*.
+
+```
+McDonald_Exp_Predictors = strat_train_set_new.drop("Amount",axis=1).values
+McDonald_Exp_Predictors
+
+array([['Beef', 2],
+       ['Sausage', 3],
+       ['Chicken', 8],
+       ['Beef', 5],
+       ['Chicken', 5],
+       ['Chicken', 3]], dtype=object)
+```
+
+Shape of `McDonald_Exp_Predictors`
+
+```
+McDonald_Exp_Predictors.shape
+
+(178, 2)
+```
+
+## Labels
+Now, I've to get the Labels, which is the *Amount* for the DataFrame and convert it to an array with a 178,1 shape.
+
+```
+McDonald_Exp_Labels = strat_train_set_new["Amount"].values.reshape(-1,1)
+McDonald_Exp_Labels[:5]
+
+array([[2.3],
+       [3. ],
+       [2. ],
+       [2.6],
+       [4. ]])
+```
+
+## Creating the numerical attribute pipeline
+Next is to create the numerical attribute pipeline, which is to **standardize** the data. This is to ensure that the data does not behave badly as Algorithms such as RBF kernel of Support Vector or L1/L2 regularizers of linear models expect the individual features to more or less look like standard normally distributed data.
+
+```
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
+num_pipeline = Pipeline([
+    ('std_scaler', StandardScaler())
+    ])
+```
+
+
+```
+McDonald_Exp_Labels_Transform = num_pipeline.fit_transform(McDonald_Exp_Labels_raw)
+McDonald_Exp_Labels_Transform.shape
+
+(178, 1)
+```
+
+```
+McDonald_Exp_Labels_Transform[:6]
+
+array([[-0.63176115],
+       [-0.25376624],
+       [-0.79375896],
+       [-0.46976333],
+       [ 0.28622648],
+       [-0.68576042]])
+```
+
+# Creating the Categorical Attributes pipeline
+
+Similar to the numerical pipeline, I've to create the Categorical Attribute to transform the Categorical attributes.
+
+```
+from sklearn.preprocessing import OneHotEncoder
+cat_encoder = OneHotEncoder()
+McDonald_exp_cat_1hot = cat_encoder.fit_transform(McDonald_Exp_Predictors)
+McDonald_exp_cat_1hot
+
+<178x17 sparse matrix of type '<class 'numpy.float64'>'
+	with 356 stored elements in Compressed Sparse Row format>
+```
+
+A sparse matrix is created which holds the Categorical values for the attributes *Month* and *Food Category*.
+
+
+```
+cat_encoder.categories_
+
+[array(['Beef', 'Chicken', 'Desserts', 'Fish', 'Sausage'], dtype=object),
+ array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], dtype=object)]
+```
+
+
+```
+McDonald_exp_cat_1hot.toarray()[0]
+
+array([1., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.])
+```
+
+Now, that I've transformed the data. I can start to create the models to predict the *Amount*
+
+
+# Select and train a model
+
+## Using Linear Regression
