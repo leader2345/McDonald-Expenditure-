@@ -857,3 +857,109 @@ Now, that I've transformed the data. I can start to create the models to predict
 # Select and train a model
 
 ## Using Linear Regression
+I'll start with fitting the model with Linear Regression
+
+```
+from sklearn.linear_model import LinearRegression
+
+lin_reg = LinearRegression()
+lin_reg.fit(McDonald_exp_cat_1hot, McDonald_Exp_Labels_Transform)
+```
+
+I'll use the model to predict the labels using the transformed data set.
+
+```
+some_labels = McDonald_Exp_Labels_Transform[:5]
+some_labels
+```
+
+```
+print("Predictions:", lin_reg.predict(some_data))
+
+Predictions: [[-0.10443524]
+ [ 0.16960797]
+ [-0.31963972]
+ [ 0.42099822]
+ [-0.05129244]]
+```
+
+```
+print("Labels:", some_labels)
+
+Labels: [[-0.63176115]
+ [-0.25376624]
+ [-0.79375896]
+ [-0.46976333]
+ [ 0.28622648]]
+```
+
+Looks like the model is not predicting the values correctly.
+
+I'll plot the graph with the truth and predicted values to visualize.
+
+```
+# Plotting the scatter plot for McDonald_exp's Food Category and Month
+plt.figure(figsize=(15,6))
+plt.scatter(x=np.arange(len(McDonald_exp_cat_1hot.toarray())), y=McDonald_Exp_Labels_Transform, color="r")
+# Show predicted values with line
+plt.plot(np.arange(lin_pred.shape[0]), lin_pred, color="g")
+# Predicted values in scatter plot
+plt.scatter(x=np.arange(lin_pred.shape[0]), y=lin_pred, color="g", alpha=0.7)
+
+
+plt.title("Truth values and Predicted values", fontsize=19)
+plt.legend(["Predicted", "Truth"], fontsize=11)
+plt.xlabel("Instance number (Food Category + Month)", fontsize=19)
+plt.ylabel("Amount ($)", fontsize=19)
+save_fig("Truth and Predicted Amount in scatter plot")
+plt.show()
+```
+
+<img src="images/Truth and Predicted Amount in scatter plot.png"/>
+
+The independent variables are not showing a linear relationship with the dependent variable.
+
+## Evaluating with Root Mean Square Error (RMSE)
+
+```
+from sklearn.metrics import mean_squared_error
+McDonald_Exp_predictons = lin_reg.predict(McDonald_exp_cat_1hot)
+
+lin_mse = mean_squared_error(McDonald_Exp_Labels_Transform, McDonald_Exp_predictons)
+lin_rmse = np.sqrt(lin_mse)
+lin_rmse
+
+0.870973792921448
+```
+
+It's poor score, with 1 being the model is unable to make predictions using the given dataset and close to 0 being a perfect model.
+
+I'll use a more accurate performance metrics using cross validation sets.
+
+## Evaluating linear regression RMSE scores using Cross-Validation
+
+```
+def display_scores(scores):
+    print("Scores:", scores)
+    print("Mean scores:", scores.mean())
+    print("Standard Deviation of scores:", scores.std())
+```
+
+```
+from sklearn.model_selection import cross_val_score
+lin_scores = cross_val_score(lin_reg, X= McDonald_exp_cat_1hot, y=McDonald_Exp_Labels_Transform,
+    scoring="neg_mean_squared_error", cv=10)
+
+lin_rmse_scores = np.sqrt(-lin_scores)
+display_scores(lin_rmse_scores)
+
+
+Scores: [0.7309674  1.35361157 0.82594151 1.04983202 0.82684781 0.92918623
+ 0.94165352 0.73316383 1.15403092 0.70854578]
+Mean scores: 0.9253780578327365
+Standard Deviation of scores: 0.19818883603032944
+```
+
+Similarly, the scores are poor when the cross validation set is being used.
+
+I'll try out other forms of Machine Learning Algorithms, like Polynomial Regression, Decision Trees to see if the model performs well.
