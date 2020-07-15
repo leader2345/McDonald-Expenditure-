@@ -963,3 +963,51 @@ Standard Deviation of scores: 0.19818883603032944
 Similarly, the scores are poor when the cross validation set is being used.
 
 I'll try out other forms of Machine Learning Algorithms, like Polynomial Regression, Decision Trees to see if the model performs well.
+
+## Using Decision Trees
+
+I'll use the Decision Trees to make the predictions. First, I'll create the decision tree model and fit it with the data.
+
+
+```
+from sklearn.tree import DecisionTreeRegressor
+
+tree_reg = DecisionTreeRegressor()
+tree_reg.fit(McDonald_exp_cat_1hot, McDonald_Exp_Labels_Transform)
+
+
+DecisionTreeRegressor()
+```
+
+## Evaluating with RMSE
+
+Next, I'll evaluate the results with RMSE
+
+```
+tree_some_data = McDonald_exp_cat_1hot[:5]
+tree_some_data
+
+<5x17 sparse matrix of type '<class 'numpy.float64'>'
+with 10 stored elements in Compressed Sparse Row format>
+```
+
+```
+tree_some_labels = McDonald_Exp_Labels_Transform[:5]
+tree_some_labels
+
+
+array([[-0.63176115],
+       [-0.25376624],
+       [-0.79375896],
+       [-0.46976333],
+       [ 0.28622648]])
+```
+
+```
+McDonald_Exp_predictions_tree = tree_reg.predict(tree_some_data)
+tree_mse = mean_squared_error(tree_some_labels, McDonald_Exp_predictions_tree)
+tree_rmse = np.sqrt(tree_mse)
+tree_rmse
+
+0.2261769962639955
+```
