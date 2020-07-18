@@ -1011,3 +1011,52 @@ tree_rmse
 
 0.2261769962639955
 ```
+
+The score is a lot lower compared to the Linear regression model. Can it be that the model is **overfitting**?
+I'll test it out with the cross validation set.
+
+## Evaluating Decision Trees with Cross–validation
+
+```
+from sklearn.model_selection import cross_val_score
+scores = cross_val_score(tree_reg, McDonald_exp_cat_1hot, McDonald_Exp_Labels_Transform,
+    scoring="neg_mean_squared_error", cv=10)
+```
+
+```
+tree_rmse_score = np.sqrt(-scores)
+display_scores(tree_rmse_score)
+
+Scores: [0.7216546  1.34146295 0.95220466 1.12895683 1.20170276 0.99620515
+ 0.99395446 0.93036104 1.18528619 0.70273145]
+Mean: 1.0154520079113571
+Standard Deviation: 0.1946493831760019
+```
+
+Yes, the model is **overfitting** as the cross validation score is much higher compared to the initial score.
+
+I'll introduce some regularization to reduce the overfitting by specifying the hyperparameters `max_depth` of 7 and `min_samples_leaf` of 8.
+
+```
+tree_reg_regularized = DecisionTreeRegressor(max_depth=7, min_samples_leaf=8)
+tree_reg_regularized.fit(McDonald_exp_cat_1hot, McDonald_Exp_Labels_Transform)
+
+DecisionTreeRegressor(max_depth=7, min_samples_leaf=8)
+```
+
+```
+scores = cross_val_score(tree_reg_regularized, McDonald_exp_cat_1hot, McDonald_Exp_Labels_Transform,
+    scoring="neg_mean_squared_error", cv=10)
+```
+
+```
+tree_rmse_scores = np.sqrt(-scores)
+display_scores(tree_rmse_scores)
+
+Scores: [0.65363898 1.31596176 0.82334726 1.03493158 0.93120335 0.98951448
+ 0.95545477 0.77922789 0.98986585 0.68839315]
+Mean: 0.9161539067913695
+Standard Deviation: 0.18294577855591856
+```
+
+The RMSE mean score is slightly lower now that I've added some regularization.
