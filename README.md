@@ -75,7 +75,7 @@ exp_data_1 = pd.DataFrame(exp_dataset, columns=["Notes", "Amount", "Category", "
 exp_data_1.head()
 ```
 
-<img src = "Blog Pictures/Getting_impt_attributes.png" alt=""></img>
+<img src = "Blog Pictures/Getting_impt_attributes.png" alt="">
 
 
 I'll get the number of rows for the top 5 Categories and display them.
@@ -363,8 +363,7 @@ McDonald_FishBurger.loc[:, "Category"] = "Fish"
 McDonald_FishBurger.head()
 ```
 
-**Show Image here**
-
+<img src="Blog Pictures/Food_Cat_Fish.png"/>
 <br>I'll do the same for the rest of the Food Category.</br>
 
 ## Obtaining the Chicken Burger category
@@ -373,7 +372,7 @@ McDonald_ChickenBurger = McDonald_Exp[McDonald_Exp["Notes"].str.contains("Chicke
 McDonald_ChickenBurger.head()
 ```
 
-**Insert Image here**
+<img src="Blog Pictures/Food_Cat_Chicken.png"/>
 
 Replace "Food & Beverage" string with "Chicken"
 
@@ -391,7 +390,7 @@ herb_chicken_pie = McDonald_ChickenBurger[McDonald_ChickenBurger["Notes"].str.co
 herb_chicken_pie
 ```
 
-**Insert Picture here**
+<img src="Blog Pictures/McDonald_Herb_Chicken_Pie.png"/>
 
 ```
 McDonald_ChickenBurger = McDonald_ChickenBurger.drop(herb_chicken_pie.index)
@@ -412,7 +411,7 @@ Combined_Food_Cat = pd.concat(Frames)
 Combined_Food_Cat.sort_values(by="ID", ascending=False)
 ```
 
-**Insert Picture**
+<img src="Blog Pictures/McDonald_Combined_Food_Cat.png"/>
 
 ```
 Combined_Food_Cat["Category"].value_counts()
@@ -1112,4 +1111,8 @@ Mean Cross validation RMSE scores for Random Forest: 0.9628
 
 ## Conclusion
 
-Despite testing out other models and the tuning of the hyperparameters of the models, I'm stil unable to obtain a model that predicts the `amount` accurately. 
+Despite testing out other models and the tuning of the hyperparameters of the models, I'm still unable to obtain a model that predicts the `amount` accurately.
+There is also very little correlation between the features which also one of the reasons why the models are unable to predict the `Amount` correctly.
+The cross validation scores are also performed badly as well with a lot of underfitting as both the RMSE and cross validations scores are poor. Ideally, the scores should be close to 0 for a model to accurately predict the outputs.
+
+Perhaps, using other features will like `Year` or `Day` will be much better suited to predict the `Amount` as their correlation values are higher.
