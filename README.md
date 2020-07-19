@@ -1060,3 +1060,56 @@ Standard Deviation: 0.18294577855591856
 ```
 
 The RMSE mean score is slightly lower now that I've added some regularization.
+
+<img src="images/Decision_Tree_Plotted.png"/>
+
+The scatter plot above looks almost similar to the one in the linear regression graph.
+
+Finally, I'll try out the Random Forest algorithm, which is a form of ensemble method. The Random Forest consists of multiple decision trees combined.
+
+## Using Random Forest
+```
+from sklearn.ensemble import RandomForestRegressor
+forest_reg = RandomForestRegressor()
+forest_reg.fit(McDonald_exp_cat_1hot, McDonald_Exp_Labels_Transform.ravel())
+
+RandomForestRegressor()
+```
+
+## Evaluating Random Forest with cross validation sets
+```
+from sklearn.model_selection import cross_val_score
+
+random_forest_scores = cross_val_score(forest_reg, McDonald_exp_cat_1hot, McDonald_Exp_Labels_Transform.ravel(),
+scoring="neg_mean_squared_error", cv=10)
+```
+
+```
+random_forest_rmse_scores = np.sqrt(-random_forest_scores)
+display_scores(random_forest_scores)
+
+Scores: [0.67573736 1.34689829 0.89277097 1.09806757 1.0277079  0.95549708
+ 0.98447488 0.78384503 1.17030505 0.69235282]
+Mean: 0.9627656959858992
+Standard Deviation: 0.20151895460218222
+```
+
+Ok, it seems that the RMSE mean score is a lot higher compared to the other models. I can tune the hyper parameters to add regularization.
+
+## Complete Cross validation RMSE scores for the models
+
+```
+a = "Mean Cross validation RMSE scores for "
+
+print(a+"Linear Regression", np.around(lin_rmse_scores.mean(),4))
+print(a+"Decision Trees:", np.around(tree_rmse_scores.mean(),4))
+print(a+"Random Forest:", np.around(random_forest_rmse_scores.mean(),4))
+
+Mean Cross validation RMSE scores for Linear Regression 0.9254
+Mean Cross validation RMSE scores for Decision Trees: 0.9162
+Mean Cross validation RMSE scores for Random Forest: 0.9628
+```
+
+## Conclusion
+
+Despite testing out other models and the tuning of the hyperparameters of the models, I'm stil unable to obtain a model that predicts the `amount` accurately. 
