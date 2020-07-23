@@ -6,7 +6,7 @@ I'll start by loading the dataset:
 
 <img src = "Blog Pictures/Loading_the_data_code.png" alt="">
 
-<img src = "Blog Pictures/Loading_the_data_table.png" alt="">
+<p></p>
 
 I'll be only taking the important attributes such as: ID, Notes, Amount, Category and the Date for this project.
 
@@ -57,7 +57,7 @@ exp_dataset[exp_dataset["Notes"].isnull().values]
 ```
 
 <img src = "Blog Pictures/Null_values_notes_table.png" alt="">
-<br></br>
+<p></p>
 
 It looks like the null values are under the Driving Lessons and Salary Category.
 As we are only getting the Food Category, we can ignore these as they'll be dropped.
@@ -100,7 +100,7 @@ I'll only be getting the Food & Beverage Category. The following code extracts t
     exp_data_1.head(10)
 
 <img src = "Blog Pictures/exp_data_1_head_10.png" alt="">
-<br></br>
+<p></p>
 
 The **Amount** Category displays the (-) sign. It needs to be converted to positive. I'll be using the abs()
 function to convert it to positive integers.
@@ -306,7 +306,7 @@ exp_data_1
 ```
 
 <img src="Blog Pictures/Exp_data_1_new_columns.png">
-<br></br>
+<p></p>
 
 Next, we move on to creating the different food categories under the "Category" column
 
@@ -320,7 +320,7 @@ McDonald_Exp = exp_data_1[exp_data_1["Notes"].str.contains("McDonald", case=Fals
 McDonald_Exp.sort_index()
 ```
 <img src="Blog Pictures/McDonald_Exp.png"/>
-<br></br>
+<p></p>
 
 # Splitting the Category column into 5 different Categories
 
@@ -443,7 +443,7 @@ Combined_Food_Cat[Combined_Food_Cat.index.duplicated(keep=False)].sort_index()
 ```
 
 <img src="Blog Pictures/Duplicate_values.png">
-<br></br>
+<p></p>
 
 As mentioned earlier, the some of the food have their categories overlapped as some rows have 2 categories inside them. For simplicity, I'll be removing every second row and then append them back into the Combined_Food_Cat. There are all together 7 duplicate values.
 
@@ -530,15 +530,15 @@ Looks good, the *Category* is renamed to *Food Category*. Now, I've to remove th
 Combined_Food_Cat_new.drop("Date", axis=1, inplace=True)
 Combined_Food_Cat_new.head()
 ```
-<img src="Blog Pictures/Combined_Food_Cat_new.png" />
-<br></br>
+<img src="Blog Pictures/Strat_train_set_new.png"/>
+<p></p>
 
 ## Gaining insights on McDonald's Data
 
 I'll be plotting a histogram to show the *Amount* spent for *Day*, *Month*, *Year*.   
 
 <img src="images/Combined_Food_Cat_new_histogram.png"/>
-<br></br>
+<p></p>
 
 Some points to take from the histogram:
 * The *Amount* highest concentration range from $2-3
@@ -550,7 +550,7 @@ What's not shown in the histogram is the Quarterly Periods expenditure.
 I'll shown it below with each *Food Category* for each Quarterly Period using a stacked bar chart.
 
 <img src="images/Quarterly McDonald Expense.png"/>
-<br></br>
+<p></p>
 
 Keypoints from the Quarterly McDonald Expense stacked bar charts
 
@@ -561,7 +561,7 @@ Keypoints from the Quarterly McDonald Expense stacked bar charts
 The below shows the scatter plot version of the graph
 
 <img src="images/Scatter plot for Amount spent for each Quarterly Period per Food Category.png"/>
-<br></br>
+<p></p>
 
 
 I'll be mainly focusing on the *amount*, *Food Category* and *months* attributes.
